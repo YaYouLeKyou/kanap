@@ -16,9 +16,9 @@ fetch("http://localhost:3000/api/products/")
 // _id: "107fb5b75607497b96722bda5b504926"
 
 
-function addProducts(data) {
-    data.forEach(element => {
-        console.log("element", element)
+function addProducts(Kanaps) {
+    Kanaps.forEach(kanap => {
+        console.log("element", kanap)
 
         const {
             _id,
@@ -26,7 +26,7 @@ function addProducts(data) {
             altTxt,
             name,
             description
-        } = element
+        } = kanap
         //destructuring de:
         // const _id = data[0]._id
         // const imageUrl = data[0].imageUrl
@@ -56,9 +56,9 @@ function appendElementsToArticle(article, array) {
 }
 
 function createAnchor(id) {
-    const anchor = document.createElement("a")
-    anchor.href = "./product.html?" + id
-    return anchor
+    const aHref = document.createElement("a");
+    aHref.href = "./product.html?id=" + id;
+    return aHref
 }
 
 function appendArticleToAnchor(anchor, article) {
