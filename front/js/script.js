@@ -65,7 +65,7 @@ function appendArticleToAnchor(anchor, article) {
     const items = document.querySelector("#items")
     if (items != null) {
         items.appendChild(anchor)
-        items.appendChild(article)
+        anchor.appendChild(article)
     }
 }
 
