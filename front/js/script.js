@@ -1,54 +1,73 @@
 fetch("http://localhost:3000/api/products/")
-    .then((response) => {
-        return response.json();
-    })
+    .then((res) => res.json())
     .then((data) => {
-        // console.log(data)
-        return productList(data); //homeProduct
-    });
+        console.log(data)
+        return addProducts(data)
+    })
 
+// altTxt: "Photo d'un canapé bleu, deux places"
+// colors: (3) ['Blue', 'White', 'Black']
+// description: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+// imageUrl: "http://localhost:3000/images/kanap01.jpeg"
+// name: "Kanap Sinopé"
+// price: 1849
+// _id: "107fb5b75607497b96722bda5b504926"
 
-function productList(array) {
-    //création d'une boucle pour avoir les données pour chaque produit
-    array.forEach((array) => {
-        const id = array._id;
+function addProducts(data) {
+    const id = data[0]._id
+    const imageUrl = data[0].imageUrl
+    const altTxt = data[0].altTxt
+    const image = createImage(imageUrl, altTxt)
+    const name = data[0].name
+    const description = data[0].description
 
-        // variable pour créer la balise alt et son href
-        const aHref = document.createElement("a");
-        aHref.href = "./product.html?id=" + id;
+    const anchor = createAnchor(id)
 
-        // variable pour créer la balise article
-        const article = document.createElement("article");
+    const article = document.createElement("article")
+    const h3 = createH3(name)
+    const p = createParagraph(description)
 
-        // donnée et détail pour l'image
-        const image = document.createElement("img");
-        image.src = array.imageUrl;
-        image.alt = array.altTxt + " , " + array.name;
-
-        // donnée et détail dans la balise h3
-        const h3 = document.createElement("h3");
-        h3.classList.add("productName");
-        h3.textContent = array.name;
-
-        // donné et détail dans la balise p
-        const p = document.createElement("p");
-        p.classList.add("productDescription");
-        p.textContent = array.description;
-
-        // appel de la fonction afin de montrer les enfants du parent #Items
-        createTagElement(aHref, article, image, h3, p);
-    });
+    article.appendChild(image)
+    article.appendChild(h3)
+    article.appendChild(p)
+    appendChildren(anchor, article)
 }
 
-//Fonction qui donne les enfants au parent #items
 
-function createTagElement(aHref, article, image, h3, p) {
-    const items = document.querySelector("#items");
+function createAnchor(id) {
+    const anchor = document.createElement("a")
+    anchor.href = "./product.html?" + id
+    return anchor
+}
+
+function appendChildren(anchor, article) {
+    const items = document.querySelector("#items")
     if (items != null) {
-        items.appendChild(aHref);
-        aHref.appendChild(article);
-        article.appendChild(image);
-        article.appendChild(h3);
-        article.appendChild(p);
+        items.appendChild(anchor)
+        items.appendChild(article)
     }
+}
+
+function createImage(imageUrl, altTxt) {
+    const image = document.createElement("img")
+    image.src = imageUrl
+    image.alt = altTxt
+    image.removeAttribute("title")
+    image.removeAttribute("style")
+    return image
+}
+
+function createH3(name) {
+    const h3 = document.createElement("h3")
+    h3.textContent = name
+    h3.classList.add(".productName")
+    return h3
+
+}
+
+function createParagraph(description) {
+    const p = document.createElement("p")
+    p.textContent = description
+    p.classList.add("productDescription")
+    return p
 }
