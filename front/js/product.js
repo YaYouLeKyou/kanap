@@ -6,13 +6,13 @@ console.log(id)
 
 fetch(`http://localhost:3000/api/products/${id}`)
     .then((response) => response.json())
-    .then((res) => handleitem(res))
-console.log(res)
+    .then((res) => handleData(res))
     .catch(function (error) {
         alert(error);
     });
 
-function handleitem(product) {
+function handleData(item) {
+    console.log(item)
     const {
         altTxt,
         colors,
@@ -21,7 +21,7 @@ function handleitem(product) {
         name,
         price,
         _id
-    } = product
+    } = item
     // console.log(item)
     // const altTxt = item.altTxt
     // console.log(altTxt)
@@ -41,11 +41,13 @@ function handleitem(product) {
 }
 
 function createImage(imageUrl, altTxt) {
-    const image = document.createElement("img")
-    image.src = imageUrl
-    image.alt = altTxt
-    const parent = document.querySelector(".item_img")
-    if (parent != null) parent.appendChild(image)
+    const itemImg = document.querySelector(".item__img");
+
+    // variable pour créer une image et intégré l'url et alt
+    const image = document.createElement("img");
+    itemImg.appendChild(image);
+    image.src = imageUrl;
+    image.alt = altTxt;
 }
 
 function createTitle(name) {
