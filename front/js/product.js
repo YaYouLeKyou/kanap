@@ -1,8 +1,10 @@
 const queryString = window.location.search
-console.log(queryString)
 const urlParams = new URLSearchParams(queryString)
 const id = urlParams.get("id")
-console.log(id)
+if (id != null) {
+    let itemPrice = 0
+
+}
 
 fetch(`http://localhost:3000/api/products/${id}`)
     .then((response) => response.json())
@@ -12,7 +14,6 @@ fetch(`http://localhost:3000/api/products/${id}`)
     });
 
 function handleData(item) {
-    console.log(item)
     const {
         altTxt,
         colors,
@@ -32,7 +33,7 @@ function handleData(item) {
     // console.log(name)
     // const price = item.price
     // const _id = item.id
-
+    itemPrice = price
     createImage(imageUrl, altTxt)
     createTitle(name)
     createPrice(price)
@@ -74,7 +75,32 @@ function createColors(colors) {
             option.value = color
             select.appendChild(option)
             option.textContent = color
-            console.log(option)
         });
     }
+}
+
+const button = document.querySelector("#addToCart");
+if (button != null) {
+    button.addEventListener("click", () => {
+        const colors = document.querySelector("#colors").value;
+        const quantity = document.querySelector("#quantity").value;
+
+        if (colors == null || colors === "" || quantity == null || quantity == 0 || quantity >= 101) {
+            alert("SVP choissez une couleur et une quantité max 100, merci.");
+            return button;
+        }
+
+        const data = {
+            id: id,
+            color: colors,
+            quantity: Number(quantity),
+            price: itemPrice
+        }
+
+        let addId = `${id}` + ":" + data;
+        localStorage.setItem(addId, JSON.stringify(data));
+
+        //redirection vers le pannier
+        window.location.href = "cart.html";
+    });
 }
