@@ -3,6 +3,7 @@ const urlParams = new URLSearchParams(queryString)
 const id = urlParams.get("id")
 if (id != null) {
     let itemPrice = 0
+    let imgUrl, altText
 
 }
 
@@ -34,6 +35,8 @@ function handleData(item) {
     // const price = item.price
     // const _id = item.id
     itemPrice = price
+    imgUrl = imageUrl
+    altText = altTxt
     createImage(imageUrl, altTxt)
     createTitle(name)
     createPrice(price)
@@ -94,7 +97,9 @@ if (button != null) {
             id: id,
             color: colors,
             quantity: Number(quantity),
-            price: itemPrice
+            price: itemPrice,
+            imageUrl: imgUrl,
+            altText: altText
         }
 
         let addId = `${id}` + ":" + data;
