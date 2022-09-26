@@ -19,8 +19,7 @@ function handleData(item) {
         description,
         imageUrl,
         name,
-        price,
-        _id
+        price
     } = item
     // console.log(item)
     // const altTxt = item.altTxt
@@ -38,6 +37,7 @@ function handleData(item) {
     createTitle(name)
     createPrice(price)
     createDescription(description)
+    createColors(colors)
 }
 
 function createImage(imageUrl, altTxt) {
@@ -63,4 +63,18 @@ function createPrice(price) {
 function createDescription(description) {
     const p = document.querySelector("#description")
     if (p != null) p.textContent = description
+}
+
+function createColors(colors) {
+    const select = document.querySelector("#colors")
+    if (select != null) {
+
+        colors.forEach(color => {
+            const option = document.createElement("option")
+            option.value = color
+            select.appendChild(option)
+            option.textContent = color
+            console.log(option)
+        });
+    }
 }
