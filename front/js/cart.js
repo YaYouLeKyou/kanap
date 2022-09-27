@@ -1,12 +1,12 @@
 const cart = [];
 
-takeItemFromCache()
+takeItemFromCache() //a voir
 console.log(cart)
 cart.forEach((item) => displayItem(item))
 
 function takeItemFromCache() {
     const numberOfItems = localStorage.length
-    for (let i = 0; i < numberOfItems - 1; i++) { //voir avec Romuald pq randid dans localStorage
+    for (let i = 0; i < numberOfItems - 1; i++) {
         const item = localStorage.getItem(localStorage.key(i)) || ""
         const itemObject = JSON.parse(item)
         cart.push(itemObject)
@@ -23,6 +23,25 @@ function displayItem(item) {
     article.appendChild(cardItemContent)
 
     displayArticle(article)
+    displayTotalPrice(item)
+    displayTotalQuantity(item)
+}
+
+
+function displayTotalPrice(item) {
+    let total = 0
+    const totalPrice = document.querySelector("#totalPrice")
+    cart.forEach(item => {
+        const totalItemPrice = item.price * item.quantity
+        total += totalItemPrice
+        totalPrice.textContent = total
+    })
+}
+
+function displayTotalQuantity(item) {
+    const totalQuantity = document.querySelector("#totalQuantity")
+    const total = cart.reduce((total, item) => total + item.quantity, 0)
+    totalQuantity.textContent = total
 }
 
 function createCardItemContent(item) {
@@ -85,7 +104,17 @@ function addQuantityToSettings(settings, item) {
     input.min = "1"
     input.max = "100"
     input.value = item.quantity
-    settings.appendChild(input)
+    quantity.appendChild(input)
+    settings.appendChild(quantity)
+}
+
+function deleteSettings() {
+    const div = document.createElement("div")
+    div.classList.add("cart__item__content_settings__delete")
+    const p = document.createElement("p")
+    p.textContent("Supprimer")
+    div.appendChild(p)
+    settings.appendChild(div)
 }
 
 function displayArticle(article) {
