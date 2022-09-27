@@ -94,6 +94,7 @@ if (button != null) {
             return button;
         }
 
+        const key = `${id}-${colors}`
         const data = {
             id: id,
             name: articleName,
@@ -105,7 +106,7 @@ if (button != null) {
         }
 
         let addId = `${id}` + ":" + data;
-        localStorage.setItem(addId, JSON.stringify(data));
+        localStorage.setItem(key, JSON.stringify(data));
 
         //redirection vers le pannier
         window.location.href = "cart.html";
