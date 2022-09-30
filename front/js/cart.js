@@ -4,6 +4,9 @@ takeItemFromCache() //a voir
 console.log(cart)
 cart.forEach((item) => displayItem(item))
 
+const orderButton = document.querySelector("#order")
+orderButton.addEventListener("click", (e) => submitForm(e))
+
 function takeItemFromCache() {
     const numberOfItems = localStorage.length
     for (let i = 0; i < numberOfItems - 1; i++) {
@@ -166,11 +169,6 @@ function createArticle(item) {
     article.classList.add("card__item")
     article.dataset.id = item.id
     article.dataset.color = item.color
-    // article.appendChild(createTitle(item))
-    // article.appendChild(createPrice(item))
-    // article.appendChild(createQuantity(item))
-    // article.appendChild(createColor(item))
-    // article.appendChild(createImage(item))
     return article
 }
 
@@ -184,4 +182,87 @@ function createImageDiv(item) {
     div.style.textAlign = 'center'
     div.appendChild(image)
     return div
+}
+
+function submitForm(e) {
+    e.preventDefault();
+    if (cart.length === 0) {
+        alert("veuillez choisir un article")
+        return
+    }
+
+    if (formIsInvalid()) return
+    if (emailIsInvalid()) return
+
+    const requestBody = createRequestBody()
+    const form = document.querySelector(".cart__order__form")
+    fetch("http://localhost:3000/api/products/order", {
+            method: "POST",
+            body: JSON.stringify(requestBody),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then((res) => res.json())
+        .then((data) => console.log(data))
+    console.log(form.elements.firstName.value)
+}
+
+function createRequestBody() {
+    const form = document.querySelector(".cart__order__form")
+    const firstName = form.elements.firstName.value
+    const lastName = form.elements.lastName.value
+    const address = form.elements.address.value
+    const city = form.elements.city.value
+    const email = form.elements.email.value
+    const requestBody = {
+        contact: {
+            firstName: firstName,
+            lastName: lastName,
+            address: address,
+            city: city,
+            email: email
+        },
+        products: getIdsFromCache()
+
+    }
+    console.log("requestBody:" + requestBody)
+    return requestBody
+
+
+}
+
+function getIdsFromCache() {
+    const numberOfProducts = localStorage.length
+    const ids = []
+    for (let i = 0; i < numberOfProducts - 1; i++) {
+        const key = localStorage.key(i)
+        console.log(key)
+        const id = key.split("-")[0]
+        ids.push(id)
+        console.log("ids:" + ids)
+
+    }
+    return ids
+}
+
+function formIsInvalid() {
+    const form = document.querySelector(".cart__order__form")
+    const inputs = form.querySelectorAll("input")
+    inputs.forEach((input) => {
+        if (input.value === "") {
+            alert("Veuillez remplir tous les champs svp")
+            return true
+        }
+        return false
+    })
+}
+
+function emailIsInvalid() {
+    const email = document.querySelector("#email").value
+    const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+    if (regex.test(email) === false) {
+        alert("Veuillez rentrer un email valide")
+        return true
+    }
+    return false
 }
