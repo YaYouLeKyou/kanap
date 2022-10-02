@@ -1,6 +1,6 @@
 const cart = [];
 
-takeItemFromCache() //a voir
+takeItemFromCache()
 console.log(cart)
 cart.forEach((item) => displayItem(item))
 
@@ -11,11 +11,11 @@ orderButton.addEventListener("click", (e) => submitForm(e))
 
 function takeItemFromCache() {
     const numberOfItems = localStorage.length
-    for (let i = 0; i < numberOfItems - 1; i++) {
+    for (let i = 0; i < numberOfItems; i++) {
         const item = localStorage.getItem(localStorage.key(i)) || ""
         const itemObject = JSON.parse(item)
         cart.push(itemObject)
-        console.log(itemObject)
+        console.log(numberOfItems)
     }
 }
 
@@ -284,7 +284,7 @@ function createRequestBody() {
 function getIdsFromCache() {
     const numberOfProducts = localStorage.length
     const ids = []
-    for (let i = 0; i < numberOfProducts - 1; i++) {
+    for (let i = 0; i < numberOfProducts; i++) {
         const key = localStorage.key(i)
         console.log(key)
         const id = key.split("-")[0]

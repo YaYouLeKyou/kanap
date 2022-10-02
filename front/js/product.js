@@ -27,17 +27,7 @@ function handleData(item) {
         name,
         price
     } = item
-    // console.log(item)
-    // const altTxt = item.altTxt
-    // console.log(altTxt)
-    // const colors = item.colors
-    // const description = item.description
-    // const imageUrl = item.imageUrl
-    // console.log(imageUrl)
-    // const name = item.name
-    // console.log(name)
-    // const price = item.price
-    // const _id = item.id
+
     itemPrice = price
     imgUrl = imageUrl
     altText = altTxt
@@ -117,6 +107,7 @@ if (button != null) {
             imageUrl: imgUrl,
             altText: altText
         }
+
 
         localStorage.setItem(key, JSON.stringify(data));
 
