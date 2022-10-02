@@ -1,3 +1,5 @@
+//acceder a l' api ou retourner une erreur
+
 fetch("http://localhost:3000/api/products/")
     .then((res) => res.json())
     .then((data) => {
@@ -7,15 +9,65 @@ fetch("http://localhost:3000/api/products/")
         alert(error);
     });
 
-// altTxt: "Photo d'un canapé bleu, deux places"
-// colors: (3) ['Blue', 'White', 'Black']
-// description: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-// imageUrl: "http://localhost:3000/images/kanap01.jpeg"
-// name: "Kanap Sinopé"
-// price: 1849
-// _id: "107fb5b75607497b96722bda5b504926"
 
+//pour chaque produit, faire apparaitre l' élément dans un article
 
+function appendElementsToArticle(article, array) {
+    array.forEach((item) => {
+        article.appendChild(item)
+    })
+
+}
+
+//créer un anchor pour englober chaque article
+
+function createAnchor(id) {
+    const aHref = document.createElement("a");
+    aHref.href = "./product.html?id=" + id;
+    return aHref
+}
+
+//faire apparaitre l' article dans chaque anchor
+
+function appendArticleToAnchor(anchor, article) {
+    const items = document.querySelector("#items")
+    if (items != null) {
+        items.appendChild(anchor)
+        anchor.appendChild(article)
+    }
+}
+
+//pour chaque produit créer une image
+
+function createImage(imageUrl, altTxt) {
+    const image = document.createElement("img")
+    image.src = imageUrl
+    image.alt = altTxt
+    image.removeAttribute("title")
+    image.removeAttribute("style")
+    return image
+}
+
+//pour chaque produit créer un titre
+
+function createH3(name) {
+    const h3 = document.createElement("h3")
+    h3.textContent = name
+    h3.classList.add(".productName")
+    return h3
+
+}
+
+//pour chaque produit créer un paragraphe de déscription
+
+function createParagraph(description) {
+    const p = document.createElement("p")
+    p.textContent = description
+    p.classList.add("productDescription")
+    return p
+}
+
+//faire apparaitre tous les produits de l' api avec leurs images, texts alt, titres, description
 function addProducts(Kanaps) {
     Kanaps.forEach(kanap => {
         console.log("element", kanap)
@@ -27,12 +79,7 @@ function addProducts(Kanaps) {
             name,
             description
         } = kanap
-        //destructuring de:
-        // const _id = data[0]._id
-        // const imageUrl = data[0].imageUrl
-        // const altTxt = data[0].altTxt
-        // const name = data[0].name
-        // const description = data[0].description
+
         const image = createImage(imageUrl, altTxt)
 
         const anchor = createAnchor(_id)
@@ -44,51 +91,4 @@ function addProducts(Kanaps) {
 
         appendArticleToAnchor(anchor, article)
     })
-}
-
-function appendElementsToArticle(article, array) {
-    array.forEach((item) => {
-        article.appendChild(item)
-    })
-    // article.appendChild(image)
-    // article.appendChild(h3)
-    // article.appendChild(p)
-}
-
-function createAnchor(id) {
-    const aHref = document.createElement("a");
-    aHref.href = "./product.html?id=" + id;
-    return aHref
-}
-
-function appendArticleToAnchor(anchor, article) {
-    const items = document.querySelector("#items")
-    if (items != null) {
-        items.appendChild(anchor)
-        anchor.appendChild(article)
-    }
-}
-
-function createImage(imageUrl, altTxt) {
-    const image = document.createElement("img")
-    image.src = imageUrl
-    image.alt = altTxt
-    image.removeAttribute("title")
-    image.removeAttribute("style")
-    return image
-}
-
-function createH3(name) {
-    const h3 = document.createElement("h3")
-    h3.textContent = name
-    h3.classList.add(".productName")
-    return h3
-
-}
-
-function createParagraph(description) {
-    const p = document.createElement("p")
-    p.textContent = description
-    p.classList.add("productDescription")
-    return p
 }

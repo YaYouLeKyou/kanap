@@ -7,12 +7,16 @@ if (id != null) {
 
 }
 
+//accéder a la base de données du produit choisi
+
 fetch(`http://localhost:3000/api/products/${id}`)
     .then((response) => response.json())
     .then((res) => handleData(res))
     .catch(function (error) {
         alert(error);
     });
+
+//afficher les données du produit selectionner grace aux fonctions create
 
 function handleData(item) {
     const {
@@ -45,6 +49,8 @@ function handleData(item) {
     createColors(colors)
 }
 
+//créer l' image du produit
+
 function createImage(imageUrl, altTxt) {
     const itemImg = document.querySelector(".item__img");
 
@@ -55,20 +61,25 @@ function createImage(imageUrl, altTxt) {
     image.alt = altTxt;
 }
 
+//créer le titre
 function createTitle(name) {
     const h1 = document.querySelector("#title")
     if (h1 != null) h1.textContent = name
 }
-
+//créer le prix du produit
 function createPrice(price) {
     const span = document.querySelector('#price')
     if (span != null) span.textContent = price
 }
 
+//créer la déscription
+
 function createDescription(description) {
     const p = document.querySelector("#description")
     if (p != null) p.textContent = description
 }
+
+//créer les couleur au choix
 
 function createColors(colors) {
     const select = document.querySelector("#colors")
@@ -82,6 +93,8 @@ function createColors(colors) {
         });
     }
 }
+
+//créer le bouton ajouter au panier, stocker les informations sur le produit dans le localStorage au click et rediriger vers la page cart
 
 const button = document.querySelector("#addToCart");
 if (button != null) {
@@ -105,7 +118,6 @@ if (button != null) {
             altText: altText
         }
 
-        let addId = `${id}` + ":" + data;
         localStorage.setItem(key, JSON.stringify(data));
 
         //redirection vers le pannier

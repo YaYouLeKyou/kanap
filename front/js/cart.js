@@ -7,6 +7,8 @@ cart.forEach((item) => displayItem(item))
 const orderButton = document.querySelector("#order")
 orderButton.addEventListener("click", (e) => submitForm(e))
 
+//récupérer les données stockées dans le cache du localStorage
+
 function takeItemFromCache() {
     const numberOfItems = localStorage.length
     for (let i = 0; i < numberOfItems - 1; i++) {
@@ -16,6 +18,8 @@ function takeItemFromCache() {
         console.log(itemObject)
     }
 }
+
+//afficher les produits selectionnés dans le panier
 
 function displayItem(item) {
     const article = createArticle(item)
@@ -30,27 +34,44 @@ function displayItem(item) {
     displayTotalQuantity(item)
 }
 
-
-function displayTotalPrice(item) {
-    let total = 0
-    const totalPrice = document.querySelector("#totalPrice")
-    cart.forEach(item => {
-        const totalItemPrice = item.price * item.quantity
-        total += totalItemPrice
-        totalPrice.textContent = total
-    })
-}
-
-function displayTotalQuantity(item) {
-    const totalQuantity = document.querySelector("#totalQuantity")
-    const total = cart.reduce((total, item) => total + item.quantity, 0)
-    totalQuantity.textContent = total
-}
+//créer la carte contenant le produit
 
 function createCardItemContent(item) {
     const div = document.createElement("div")
     div.classList.classList.add("card__item__content")
 }
+
+//créer les articles
+
+function createArticle(item) {
+    const article = document.createElement("article")
+    article.classList.add("card__item")
+    article.dataset.id = item.id
+    article.dataset.color = item.color
+    return article
+}
+
+//afficher les articles
+
+function displayArticle(article) {
+    document.querySelector('#cart__items').appendChild(article)
+}
+
+//créer l' image des produits
+
+function createImageDiv(item) {
+    const div = document.createElement("div")
+    div.classList.add("card__item__img")
+    const image = document.createElement('img')
+    image.src = item.imageUrl
+    image.alt = item.altTxt
+    image.style.width = '50%'
+    div.style.textAlign = 'center'
+    div.appendChild(image)
+    return div
+}
+
+//créer le contenu des cartes
 
 function createCartContent(item) {
     const cartItemContent = document.createElement("div")
@@ -63,6 +84,8 @@ function createCartContent(item) {
     return cartItemContent
 
 }
+
+//créer la déscription contenant le titre, la déscription et le prix unitaire
 
 function createDescription(item) {
     const description = document.createElement("div")
@@ -85,6 +108,8 @@ function createDescription(item) {
 
 }
 
+//créer les settings pour le choix des quantités
+
 function createSettings(item) {
     const settings = document.createElement("div")
     settings.classList.add("card__item__content__settings")
@@ -92,6 +117,8 @@ function createSettings(item) {
     deleteSettings(settings, item)
     return settings
 }
+
+//ajouter les quantités aux settings
 
 function addQuantityToSettings(settings, item) {
     const quantity = document.createElement("div")
@@ -114,6 +141,29 @@ function addQuantityToSettings(settings, item) {
     settings.appendChild(quantity)
 }
 
+//afficher la quantité totale
+
+function displayTotalQuantity(item) {
+    const totalQuantity = document.querySelector("#totalQuantity")
+    const total = cart.reduce((total, item) => total + item.quantity, 0)
+    totalQuantity.textContent = total
+}
+
+
+//afficher le prix total
+
+function displayTotalPrice(item) {
+    let total = 0
+    const totalPrice = document.querySelector("#totalPrice")
+    cart.forEach(item => {
+        const totalItemPrice = item.price * item.quantity
+        total += totalItemPrice
+        totalPrice.textContent = total
+    })
+}
+
+//modifier le prix et la quantité
+
 function updatePriceAndQuantity(id, newValue, item) {
     const itemToUpdate = cart.find(item => item.id === id)
     itemToUpdate.quantity = Number(newValue)
@@ -123,11 +173,15 @@ function updatePriceAndQuantity(id, newValue, item) {
     saveNewDataToCache()
 }
 
+//sauvegarder les nouvelles données dans le localStorage
+
 function saveNewDataToCache() {
     const dataToSave = JSON.stringify(item)
     const key = `${item.id}-${item.color}`
     localStorage.setItem(item.id, dataToSave)
 }
+
+//créer "le bouton" supprimer
 
 function deleteSettings(settings, item) {
     const div = document.createElement("div")
@@ -139,6 +193,8 @@ function deleteSettings(settings, item) {
     settings.appendChild(div)
 }
 
+//créer la fonction qui supprime le produit et met a jour les données a l' affichage et dans le localStorage
+
 function deleteItem(item) {
     const itemToDelete = cart.findIndex((product) => product.id === item.id && product.color === item.color)
     cart.splice(itemToDelete, 1)
@@ -148,10 +204,14 @@ function deleteItem(item) {
     deleteArticleFromPage(item)
 }
 
+//fonction qui supprime les données du cache dans le localStorage
+
 function deleteFromCache(item) {
     const key = `${item.id}-${item.color}`
     localStorage.removeItem(key)
 }
+
+//fonction qui supprime l' article de la page
 
 function deleteArticleFromPage(item) {
     const articleToDelete = document.querySelector(
@@ -160,29 +220,8 @@ function deleteArticleFromPage(item) {
     articleToDelete.remove()
 }
 
-function displayArticle(article) {
-    document.querySelector('#cart__items').appendChild(article)
-}
-
-function createArticle(item) {
-    const article = document.createElement("article")
-    article.classList.add("card__item")
-    article.dataset.id = item.id
-    article.dataset.color = item.color
-    return article
-}
-
-function createImageDiv(item) {
-    const div = document.createElement("div")
-    div.classList.add("card__item__img")
-    const image = document.createElement('img')
-    image.src = item.imageUrl
-    image.alt = item.altTxt
-    image.style.width = '50%'
-    div.style.textAlign = 'center'
-    div.appendChild(image)
-    return div
-}
+//fonction qui suprime le comportement par defaut du bouton, qui verifie qu'il y a bien un article au panier, 
+//et que tout les champs sont bien tous remplis correctement puis si oui, envois les données a l' api et redirige vers la page de confirmation
 
 function submitForm(e) {
     e.preventDefault();
@@ -203,9 +242,18 @@ function submitForm(e) {
                 "Content-Type": "application/json"
             }
         }).then((res) => res.json())
-        .then((data) => console.log(data))
-    console.log(form.elements.firstName.value)
+        .then((data) => {
+            const orderId = data.orderId
+            window.location.href = "confirmation.html" + "?orderId=" + orderId
+            console.log(window.location.href)
+            return console.log(data)
+        }).catch(function (error) {
+            alert(error);
+        });
+
 }
+
+//création du corps de la requete
 
 function createRequestBody() {
     const form = document.querySelector(".cart__order__form")
@@ -231,6 +279,8 @@ function createRequestBody() {
 
 }
 
+//récupération des ids en cache
+
 function getIdsFromCache() {
     const numberOfProducts = localStorage.length
     const ids = []
@@ -245,6 +295,8 @@ function getIdsFromCache() {
     return ids
 }
 
+//fonction qui vérifie que les champs du formulaire sont bien rempli
+
 function formIsInvalid() {
     const form = document.querySelector(".cart__order__form")
     const inputs = form.querySelectorAll("input")
@@ -256,6 +308,8 @@ function formIsInvalid() {
         return false
     })
 }
+
+//fonction qui vérifi la validité de l' email via une regex
 
 function emailIsInvalid() {
     const email = document.querySelector("#email").value
